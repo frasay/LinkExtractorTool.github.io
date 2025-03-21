@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Link Extractor Tool" property="og:title"/>
+<meta content="Extract and analyze links from web pages" property="og:description"/>
+<meta content="assets/img_64x64_4e626bde.png" property="og:image"/>
+<meta content="website" property="og:type"/>
+<link href="assets/img_32x32_4e626bde.png" rel="icon" type="image/png"/>
+<title>Link Extractor Tool</title>
+<script src="assets/script_e67fd455.js"></script>
+<script src="assets/script_15ad43f3.js"></script>
+<style>
+        :root {
+            --primary-color: #ad1a32;
+            --primary-hover: #8a1528;
+            --light-primary: #f8e6e8;
+        }
+        .sport-nz-primary {
+            background-color: var(--primary-color);
+        }
+        .sport-nz-primary-hover:hover {
+            background-color: var(--primary-hover);
+        }
+        .sport-nz-text {
+            color: var(--primary-color);
+        }
+        .sport-nz-border {
+            border-color: var(--primary-color);
+        }
+        .sport-nz-bg-light {
+            background-color: var(--light-primary);
+        }
+    </style>
+<script>
+            window.load_data_from_csv = (filename) => {
+                // Implementation needed when code is downloaded
+            };
+
+            window.save_data_to_csv = (filename, data) => {
+                // Implementation needed when code is downloaded
+            };
+
+            window.call_llm = (system_prompt, user_messages, json_fields) => {
+                // Implementation needed when code is downloaded
+            };
+        </script></head>
+<body class="bg-gray-50 min-h-screen">
+<header class="sport-nz-primary text-white py-4 shadow-md">
+<div class="container mx-auto px-4">
+<h1 class="text-2xl font-bold">Link Extractor Tool</h1>
+</div>
+</header>
+<main class="container mx-auto px-4 py-8 max-w-6xl">
+<section class="mb-8 bg-white p-6 rounded-lg shadow-md">
+<h2 class="text-xl font-bold mb-4 sport-nz-text">Instructions</h2>
+<ol class="list-decimal pl-5 space-y-2">
+<li>Paste HTML content into the textarea below</li>
+<li>Click "Extract Links" to analyze the content</li>
+<li>View the extracted links in the table below</li>
+<li>Use the filter options to refine results</li>
+<li>Click "Export to CSV" to download the results</li>
+</ol>
+</section>
+<section class="mb-8">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h2 class="text-xl font-bold mb-4 sport-nz-text">Paste HTML Content</h2>
+<textarea class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" id="htmlInput" placeholder="Paste HTML content here..."></textarea>
+<div class="mt-4 flex flex-wrap gap-4">
+<button class="sport-nz-primary sport-nz-primary-hover text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center" id="extractBtn">
+<svg class="h-5 w-5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" fill-rule="evenodd"></path>
+</svg>
+                        Extract Links
+                    </button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center" id="clearBtn">
+<svg class="h-5 w-5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" fill-rule="evenodd"></path>
+</svg>
+                        Clear
+                    </button>
+</div>
+</div>
+</section>
+<section class="mb-8 hidden" id="resultsSection">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex flex-wrap justify-between items-center mb-6">
+<h2 class="text-xl font-bold sport-nz-text">Extracted Links</h2>
+<div class="flex flex-wrap gap-4 mt-2 sm:mt-0">
+<div class="relative">
+<input class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" id="searchInput" placeholder="Search..." type="text"/>
+<svg class="h-5 w-5 absolute left-3 top-2.5 text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<button class="sport-nz-primary sport-nz-primary-hover text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center" id="exportBtn">
+<svg class="h-5 w-5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+</svg>
+                            Export to CSV
+                        </button>
+</div>
+</div>
+<div class="mb-4 flex items-center">
+<span class="text-sm font-medium mr-2">Show filtered links:</span>
+<label class="inline-flex items-center cursor-pointer">
+<input class="sr-only" id="showFilteredLinks" type="checkbox"/>
+<div class="relative w-11 h-6 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out">
+<div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></div>
+</div>
+</label>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full divide-y divide-gray-200">
+<thead class="bg-gray-50">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">H1 Heading</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Link Text</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">URL</th>
+</tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200" id="resultsTable">
+<!-- Results will be inserted here -->
+</tbody>
+</table>
+</div>
+<div class="hidden py-8 text-center text-gray-500" id="noResults">
+                    No links found matching your criteria.
+                </div>
+</div>
+</section>
+<section class="hidden" id="loadingSection">
+<div class="flex justify-center items-center py-12">
+<div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 sport-nz-border"></div>
+<span class="ml-3 text-lg font-medium sport-nz-text">Processing...</span>
+</div>
+</section>
+</main>
+<footer class="bg-gray-100 py-6 mt-8">
+<div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+<p>Link Extractor Tool - Works completely offline</p>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const htmlInput = document.getElementById('htmlInput');
+            const extractBtn = document.getElementById('extractBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const resultsTable = document.getElementById('resultsTable');
+            const resultsSection = document.getElementById('resultsSection');
+            const loadingSection = document.getElementById('loadingSection');
+            const searchInput = document.getElementById('searchInput');
+            const showFilteredLinks = document.getElementById('showFilteredLinks');
+            const noResults = document.getElementById('noResults');
+            
+            // Toggle switch styling
+            showFilteredLinks.addEventListener('change', function() {
+                const toggle = this.nextElementSibling;
+                const knob = toggle.querySelector('div');
+                
+                if (this.checked) {
+                    toggle.classList.add('bg-red-500');
+                    toggle.classList.remove('bg-gray-200');
+                    knob.classList.add('translate-x-5');
+                } else {
+                    toggle.classList.remove('bg-red-500');
+                    toggle.classList.add('bg-gray-200');
+                    knob.classList.remove('translate-x-5');
+                }
+                
+                filterResults();
+            });
+            
+            // Store extracted links
+            let allLinks = [];
+            let filteredLinks = [];
+            
+            // Common navigation links to filter out
+            const commonNavLinks = [
+                'skip to content',
+                'home',
+                'resources',
+                'contact us',
+                'browse directory',
+                'about us',
+                'browse funding',
+                'subscribe to newsletters'
+            ];
+            
+
+            // Extract links from HTML
+            extractBtn.addEventListener('click', function() {
+                const htmlContent = htmlInput.value.trim();
+                
+                if (!htmlContent) {
+                    alert('Please paste HTML content first.');
+                    return;
+                }
+                
+                // Show loading indicator
+                loadingSection.classList.remove('hidden');
+                resultsSection.classList.add('hidden');
+                
+                // Use setTimeout to allow the UI to update before processing
+                setTimeout(() => {
+                    try {
+                        // Create a DOM parser
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(htmlContent, 'text/html');
+                        
+                        // Identify header, navigation, and footer elements
+                        const headerElements = [...doc.querySelectorAll('header, [role="banner"], .header, #header, .site-header, #site-header')];
+                        const navElements = [...doc.querySelectorAll('nav, [role="navigation"], .nav, #nav, .navigation, #navigation, .menu, #menu, .navbar, #navbar')];
+                        const footerElements = [...doc.querySelectorAll('footer, [role="contentinfo"], .footer, #footer, .site-footer, #site-footer')];
+                        
+                        // Combine all excluded elements
+                        const excludedElements = [...headerElements, ...navElements, ...footerElements];
+                        
+                        // Extract all links
+                        const links = doc.querySelectorAll('a');
+                        allLinks = [];
+                        
+                        // Process each link
+                        links.forEach(link => {
+                            const href = link.getAttribute('href');
+                            const text = link.textContent.trim();
+                            
+                            // Skip links without href or text
+                            if (!href || !text) return;
+                            
+                            // Check if link is inside header, nav, or footer
+                            let isInExcludedSection = false;
+                            for (const element of excludedElements) {
+                                if (element.contains(link)) {
+                                    isInExcludedSection = true;
+                                    break;
+                                }
+                            }
+                            
+                            // Skip links in excluded sections
+                            if (isInExcludedSection) return;
+                            
+                            // Find the closest H1 heading
+                            let closestH1 = findClosestH1(link, doc);
+                            
+                            // Format URL (prepend domain for relative URLs)
+                            let formattedUrl = href;
+                            if (href.startsWith('/')) {
+                                formattedUrl = 'https://sportnz.org.nz' + href;
+                            }
+                            
+                            // Check if this is a common navigation link
+                            const isCommonNav = commonNavLinks.some(navLink => 
+                                text.toLowerCase().includes(navLink.toLowerCase())
+                            );
+                            
+                            allLinks.push({
+                                heading: closestH1,
+                                text: text,
+                                url: formattedUrl,
+                                isFiltered: isCommonNav
+                            });
+                        });
+                        
+                        // Display results
+                        filterResults();
+                        resultsSection.classList.remove('hidden');
+                    } catch (error) {
+                        console.error('Error processing HTML:', error);
+                        alert('Error processing HTML. Please check the console for details.');
+                    } finally {
+                        loadingSection.classList.add('hidden');
+                    }
+                }, 50);
+            });
+        
+            
+            // Find the closest H1 heading for a link
+            function findClosestH1(element, doc) {
+                // Try to find the closest H1 by traversing up the DOM
+                let current = element;
+                while (current && current !== doc.body) {
+                    // Check previous siblings for H1
+                    let sibling = current.previousElementSibling;
+                    while (sibling) {
+                        if (sibling.tagName === 'H1') {
+                            return sibling.textContent.trim();
+                        }
+                        
+                        // Check for H1 inside the sibling
+                        const h1InSibling = sibling.querySelector('h1');
+                        if (h1InSibling) {
+                            return h1InSibling.textContent.trim();
+                        }
+                        
+                        sibling = sibling.previousElementSibling;
+                    }
+                    
+                    // Move up to parent
+                    current = current.parentElement;
+                    
+                    // Check if the parent contains an H1
+                    if (current) {
+                        const h1InParent = current.querySelector('h1');
+                        if (h1InParent && !element.contains(h1InParent)) {
+                            return h1InParent.textContent.trim();
+                        }
+                    }
+                }
+                
+                // If no specific H1 found, return the first H1 on the page or a default message
+                const firstH1 = doc.querySelector('h1');
+                return firstH1 ? firstH1.textContent.trim() : 'No heading found';
+            }
+            
+            // Filter and display results
+            function filterResults() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const showFiltered = showFilteredLinks.checked;
+                
+                filteredLinks = allLinks.filter(link => {
+                    // Apply search filter
+                    const matchesSearch = 
+                        link.heading.toLowerCase().includes(searchTerm) ||
+                        link.text.toLowerCase().includes(searchTerm) ||
+                        link.url.toLowerCase().includes(searchTerm);
+                    
+                    // Apply common navigation filter
+                    return matchesSearch && (showFiltered || !link.isFiltered);
+                });
+                
+                // Display results
+                displayResults(filteredLinks);
+            }
+            
+            // Display results in the table
+            function displayResults(links) {
+                resultsTable.innerHTML = '';
+                
+                if (links.length === 0) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                    
+                    links.forEach(link => {
+                        const row = document.createElement('tr');
+                        
+                        // Add class for filtered items
+                        if (link.isFiltered) {
+                            row.classList.add('sport-nz-bg-light');
+                        }
+                        
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${escapeHtml(link.heading)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${escapeHtml(link.text)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline">
+                                <a href="${link.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.url)}</a>
+                            </td>
+                        `;
+                        
+                        resultsTable.appendChild(row);
+                    });
+                }
+            }
+            
+            // Escape HTML to prevent XSS
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+            
+            // Search functionality
+            searchInput.addEventListener('input', filterResults);
+            
+            // Clear button
+            clearBtn.addEventListener('click', function() {
+                htmlInput.value = '';
+                resultsSection.classList.add('hidden');
+                allLinks = [];
+                filteredLinks = [];
+            });
+            
+            // Export to CSV
+            exportBtn.addEventListener('click', function() {
+                if (filteredLinks.length === 0) {
+                    alert('No data to export.');
+                    return;
+                }
+                
+                // Prepare data for CSV
+                const csvData = filteredLinks.map(link => ({
+                    'H1 Heading': link.heading,
+                    'Link Text': link.text,
+                    'URL': link.url
+                }));
+                
+                try {
+                    // Use PapaParse to convert to CSV
+                    const csv = Papa.unparse(csvData);
+                    
+                    // Create download link
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'extracted_links.csv');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Try to use the save_data_to_csv function if available
+                    if (typeof window.save_data_to_csv === 'function') {
+                        try {
+                            window.save_data_to_csv('extracted_links.csv', csvData);
+                        } catch (e) {
+                            console.log('Optional save_data_to_csv function not available or failed:', e);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error exporting CSV:', error);
+                    alert('Error exporting to CSV. Please check the console for details.');
+                }
+            });
+            
+            // Initialize the tool
+            function init() {
+                // Initialize with empty textarea
+                htmlInput.value = '';
+                
+                // Save HTML input to localStorage when changed
+                htmlInput.addEventListener('input', function() {
+                    try {
+                        localStorage.setItem('linkExtractorHtml', this.value);
+                    } catch (e) {
+                        console.log('LocalStorage not available:', e);
+                    }
+                });
+            }
+            
+            init();
+        });
+    </script>
+</body>
+</html>
